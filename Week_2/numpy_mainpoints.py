@@ -129,4 +129,8 @@ print(np.all(x >= 0.1)) # check if all elements > 0.1
 
 print(x)
 
+# check if x is prime number
+x=20 
+not np.any([x%i == 0 for i in range(2, x)])
+
 
