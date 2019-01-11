@@ -139,7 +139,7 @@ elapsed_time[1000] / datetime.timedelta(hours=1)
 plt.plot(np.array(elapsed_time) / datetime.timedelta(days=1))
 plt.xlabel("Observation")
 plt.ylabel("Elapsed time (days)");
-plt.savefig("timeplot.pdf")
+plt.savefig()
 
 
 
