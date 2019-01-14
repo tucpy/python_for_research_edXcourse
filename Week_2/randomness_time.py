@@ -26,7 +26,7 @@ print(ranchoice)
 
 # select random from 1 to 4
 print(random.choice(list([1,2,3,4])))
-
+random.choice(list((1,2,3,4))) # cast the tuple as the list
 
 '''
 2.2 Examples Involving Randomness
@@ -59,7 +59,26 @@ import matplotlib.pyplot as plt
 plt.hist(rolls, bins = np.linspace(0.5, 6.5, 7))
 # histogram looks flat
 
-# tbc later
+# roll 10 independent dices, X1-X10
+# Y = X1+ X1+...+X10
+# plot histogram of Y, simulation 100 times
+
+ys = []
+for rep in range(1000000):
+    y = 0
+    for k in range(10):
+        x = random.choice([1,2,3,4,5,6])
+        y = y + x
+    ys.append(y)
+
+print(len(ys))
+# check if min and max value within the range
+min(ys)
+max(ys)
+plt.hist(ys)
+# Central Limit Theorem-> sum of random varibles regarless of their distribution
+# will follow a normal distribution of we increase sample size. For example: height of a population
+
 
 '''
 2.3 Using the NumPy random module
@@ -105,10 +124,91 @@ plt.hist(Y)
 X = np.random.randint(1,7,(1000000,10))
 Y = np.sum(X, axis = 1)
 plt.hist(Y)
-# this code is faster than standard Python code as Numpy was written in C 
+# this code is faster than standard Python code as Numpy was written in C?
 
 print(np.random.random((5,2,3)))
 
 # dimension is 10??
 print(np.sum(np.random.randint(1,7,(100,10)), axis=0))
 
+'''
+2.4 Measuring time
+Learn how to measure running time using the time module
+Compare the running time of a simulation written in pure Python to one written using NumPy
+'''
+# large dataset, how long it might take to run the code?
+import time
+
+start_time = time.clock()
+end_time = time.clock()
+howlong = end_time - start_time
+
+# Pure Python runtime
+start_time = time.clock()
+ys = []
+for rep in range(1000000):
+    y = 0
+    for k in range(10):
+        x = random.choice([1,2,3,4,5,6])
+        y = y + x
+    ys.append(y)
+end_time = time.clock()
+print(end_time - start_time)
+
+#NumPy runtime
+start_time = time.clock()
+X = np.random.randint(1,7,(10000,10))
+Y = np.sum(X, axis = 1)
+end_time = time.clock()
+print(end_time - start_time)
+
+# time different between Pure Python and Numpy: 1597 times faster
+13.229479000000001 / 0.008282000000001233
+
+'''
+2.5 Random Walks
+Learn how to generate random walks using NumPy
+'''
+# generate displacement from normal distribution (0 to 1); 2 rows, 5 columns
+np.random.normal(0,1,(2,5))
+delta_X = np.random.normal(0,1,(2,5))
+plt.plot(delta_X[0], delta_X[1], "go")
+
+# cumulative sum in numpy over columns (axis=1)
+X = np.cumsum(delta_X, axis = 1)
+print(X)
+print(delta_X)
+
+
+delta_X = np.random.normal(0,1,(2,5))
+X = np.cumsum(delta_X, axis = 1)
+plt.plot(X[0], X[1], "ro-") # red circle connected with straight lines
+plt.savefig("rw.pdf")
+# concatenate numpy array
+X_0 = np.array([[0], [0]])
+X = np.concatenate((X_0, np.cumsum(delta_X, axis = 1)), axis=1)
+
+
+# Final plot with the random walk start at location (0,0)
+X_0 = np.array([[0], [0]])
+delta_X = np.random.normal(0,1,(2,5))
+X = np.cumsum(delta_X, axis = 1)
+X = np.concatenate((X_0, np.cumsum(delta_X, axis = 1)), axis=1)
+plt.plot(X[0], X[1], "ro-")
+plt.savefig("rw2.pdf")
+
+# run 100 times
+X_0 = np.array([[0], [0]])
+delta_X = np.random.normal(0,1,(2,100))
+X = np.cumsum(delta_X, axis = 1)
+X = np.concatenate((X_0, np.cumsum(delta_X, axis = 1)), axis=1)
+plt.plot(X[0], X[1], "ro-")
+plt.savefig("rw3.pdf")
+
+# run 10000 times
+X_0 = np.array([[0], [0]])
+delta_X = np.random.normal(0,1,(2,100))
+X = np.cumsum(delta_X, axis = 1)
+X = np.concatenate((X_0, np.cumsum(delta_X, axis = 1)), axis=1)
+plt.plot(X[0], X[1], "ro-")
+plt.savefig("rw4.pdf")
